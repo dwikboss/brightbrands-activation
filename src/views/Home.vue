@@ -1,28 +1,32 @@
 <template>
-  <div class="page home">
+  <div class="page home" :class="{ slideUp: loadingFinished }">
     <div class="full-width">
       <div class="logo-area">
         <span>Bright</span>
         <img :class="{ loading: isLoading }" src="@/assets/images/logo/brightbrands-star.png" />
         <span>Brands</span>
-      </div> 
+      </div>
       <h1>Laat jouw website door ons checken!</h1>
       <div class="input-area">
         <div class="input-area">
-          <input ref="inputField" v-model="input" placeholder="Typ hier je website url..." type="text" @keyup.enter="makeRequest" />
+          <input
+            ref="inputField"
+            v-model="input"
+            placeholder="Typ hier je website url..."
+            type="text"
+            @keyup.enter="makeRequest"
+          />
           <button @click="makeRequest">Beoordeel mijn website</button>
-        </div> 
-      </div>
-      <div class="chat-area">
-        <ChatArea :response="response"/>
+        </div>
       </div>
     </div>
   </div>
+  <ChatArea :response="response" :class="{ slideUp: loadingFinished }" />
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import ChatArea from '@/components/ChatArea.vue'
+import ChatArea from '@/components/ChatArea.vue';
 import axios from 'axios';
 
 export default defineComponent({
@@ -32,10 +36,11 @@ export default defineComponent({
       input: '' as string,
       response: {},
       isLoading: false,
+      loadingFinished: false,
     };
   },
   components: {
-    ChatArea
+    ChatArea,
   },
   methods: {
     async makeRequest() {
@@ -52,6 +57,7 @@ export default defineComponent({
         console.error('Max retries reached. Giving up.');
       } finally {
         this.isLoading = false;
+        this.loadingFinished = true;
       }
     },
   },
@@ -59,6 +65,10 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+.slideUp {
+  animation: slide-up 750ms ease forwards;
+}
+
 .page.home {
   background-color: #ffff2b;
 
@@ -117,7 +127,7 @@ export default defineComponent({
         border: none;
         border-radius: 0 999px 999px 0;
         color: white;
-          transition: all 500ms ease;
+        transition: all 500ms ease;
 
         &:hover {
           cursor: pointer;
@@ -125,6 +135,7 @@ export default defineComponent({
           transform: translateX(15px);
           color: black;
           border: 1px solid black;
+          font-weight: 700;
         }
       }
     }
@@ -148,7 +159,16 @@ export default defineComponent({
   }
 
   #star {
-    //animation: loading-star 500ms infinite;
+    animation: loading-star 500ms infinite;
+  }
+
+  @keyframes slide-up {
+    0% {
+      transform: translateY(0);
+    }
+    100% {
+      transform: translateY(-100vh);
+    }
   }
 
   @keyframes loading-star {
@@ -159,6 +179,7 @@ export default defineComponent({
       transform: rotate(720deg);
     }
   }
+
   @keyframes spin {
     0% {
       transform: rotate(0deg);

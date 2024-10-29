@@ -10,6 +10,9 @@ export default defineComponent({});
 
 <style lang="scss">
 #app {
+  height: 100vh;
+  overflow: hidden;
+  background-color: #ffff2b;
   font-family: sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
